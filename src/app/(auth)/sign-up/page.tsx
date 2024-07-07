@@ -1,0 +1,102 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { SignupSchema } from "@/schema/signup.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const SignUp = () => {
+  const signupForm = useForm<z.infer<typeof SignupSchema>>({
+    resolver: zodResolver(SignupSchema),
+  });
+
+  const router = useRouter();
+  const onSubmit = () => {
+    router.push("/sign-in");
+  };
+  return (
+    <Card className="max-w-xl w-full">
+      <CardHeader>
+        <CardTitle>Register Your Account</CardTitle>
+        <CardDescription>Please register your account.</CardDescription>
+      </CardHeader>
+      <Form {...signupForm}>
+        <form action="" onSubmit={signupForm.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <FormField
+              control={signupForm.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="johndoe" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={signupForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="johndoe@profle.xyz" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={signupForm.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>This is your private.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <Button>Sign up</Button>
+          </CardFooter>
+        </form>
+      </Form>
+    </Card>
+  );
+};
+
+export default SignUp;
