@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -37,8 +38,8 @@ const SignUp = () => {
   return (
     <Card className="max-w-xl w-full">
       <CardHeader>
-        <CardTitle>Register Your Account</CardTitle>
-        <CardDescription>Please register your account.</CardDescription>
+        <CardTitle>Create Your Account</CardTitle>
+        <CardDescription>Please create your account.</CardDescription>
       </CardHeader>
       <Form {...signupForm}>
         <form action="" onSubmit={signupForm.handleSubmit(onSubmit)}>
@@ -91,7 +92,19 @@ const SignUp = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button>Sign up</Button>
+            <Button size={"lg"}>Sign up</Button>
+          </CardFooter>
+          <CardFooter className="justify-center">
+            <p>
+              Have an account{" "}
+              <NextLink
+                href={"/sign-in"}
+                className="hover:text-primary hover:underline"
+              >
+                sign in
+              </NextLink>{" "}
+              now.
+            </p>
           </CardFooter>
         </form>
       </Form>

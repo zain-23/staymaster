@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignupSchema } from "@/schema/signup.schema";
+import { signinSchema } from "@/schema/signin.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -26,8 +26,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const SignIn = () => {
-  const signupForm = useForm<z.infer<typeof SignupSchema>>({
-    resolver: zodResolver(SignupSchema),
+  const signupForm = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
   });
 
   const router = useRouter();
