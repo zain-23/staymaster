@@ -18,8 +18,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { SignupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { AxiosError } from "axios";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -30,10 +32,21 @@ const SignUp = () => {
   const signupForm = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
   });
-
   const router = useRouter();
-  const onSubmit = () => {
-    router.push("/sign-in");
+  const { toast } = useToast();
+
+  const onSubmit = async (data: z.infer<typeof SignupSchema>) => {
+    try {
+      const response = await axios.post("/api/user/sign-up", data);
+      router.push("/sign-in");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: "destructive",
+        });
+      }
+    }
   };
   return (
     <Card className="max-w-xl w-full">

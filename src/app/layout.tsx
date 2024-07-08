@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={recursive.className}>{children}</body>
+      <body className={recursive.className}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

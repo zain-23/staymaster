@@ -18,10 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { signinSchema } from "@/schema/signin.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,10 +30,20 @@ const SignIn = () => {
   const signupForm = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
   });
-
   const router = useRouter();
-  const onSubmit = () => {
-    router.push("/sign-in");
+  const { toast } = useToast();
+  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+    try {
+      const response = await axios.post("/api/user/sign-in", data);
+      router.push("/d")
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: "destructive",
+        });
+      }
+    }
   };
   return (
     <Card className="max-w-xl w-full">
@@ -75,7 +86,13 @@ const SignIn = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button>Sign in</Button>
+            <Button
+              disabled={signupForm.formState.isSubmitting}
+              isLoading={signupForm.formState.isSubmitting}
+              loadingText="loading..."
+            >
+              Sign in
+            </Button>
           </CardFooter>
         </form>
       </Form>
