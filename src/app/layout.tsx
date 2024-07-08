@@ -1,7 +1,9 @@
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+
+
 
 const recursive = Recursive({ subsets: ["latin"] });
 

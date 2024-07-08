@@ -1,4 +1,5 @@
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -50,4 +51,9 @@ export const verifySession = async () => {
   return {
     userId: session,
   };
+};
+
+export const deleteSession = () => {
+  cookies().delete(cookieOption.name);
+  revalidatePath("/d");
 };
