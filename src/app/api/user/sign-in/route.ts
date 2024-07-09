@@ -18,7 +18,7 @@ export const POST = async (request: Request, response: Response) => {
           success: false,
         },
         {
-          status: 401,
+          status: 400,
         }
       );
     // check password is correct
@@ -31,7 +31,7 @@ export const POST = async (request: Request, response: Response) => {
           success: false,
         },
         {
-          status: 401,
+          status: 400,
         }
       );
     await createSession(user._id);

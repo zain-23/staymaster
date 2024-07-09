@@ -8,13 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -25,35 +18,83 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { roomSchema } from "@/schema/room.schema";
+import { Room_Status, Room_Type } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const AddRoom = () => {
+  const [status, setStatus] = useState<Room_Status[] | null>();
+  const [roomType, setRoomType] = useState<Room_Type[] | null>();
   const roomForm = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
+    defaultValues: {
+      roomType: "",
+      status: "",
+    },
   });
+  const { toast } = useToast();
 
-  const onSubmit = () => {};
+  useEffect(() => {
+    fetchRoomStatus();
+    fetchRoomCategory();
+  }, []);
 
-  const languages = [
-    { label: "English", value: "en" },
-    { label: "French", value: "fr" },
-    { label: "German", value: "de" },
-    { label: "Spanish", value: "es" },
-    { label: "Portuguese", value: "pt" },
-    { label: "Russian", value: "ru" },
-    { label: "Japanese", value: "ja" },
-    { label: "Korean", value: "ko" },
-    { label: "Chinese", value: "zh" },
-  ] as const;
+  const fetchRoomStatus = async () => {
+    try {
+      const { data } = await axios.get("/api/rooms/get-room-status");
+      setStatus(data.data);
+    } catch (error) {
+      toast({
+        title: "Error fetching room status",
+        variant: "destructive",
+      });
+    }
+  };
+  const fetchRoomCategory = async () => {
+    try {
+      const { data } = await axios.get("/api/rooms/get-room-category");
+      setRoomType(data.data);
+    } catch (error) {
+      toast({
+        title: "Error fetching room type",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const onSubmit = async (data: z.infer<typeof roomSchema>) => {
+    try {
+      const response = await axios.post("/api/rooms/add-room", {
+        roomNumber: data.roomNumber,
+        roomType: data.roomType,
+        price: data.price,
+        status: data.status,
+      });
+      roomForm.reset();
+      toast({
+        title: response.data.message,
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data.message,
+          variant: "destructive",
+        });
+      }
+    }
+  };
   return (
     <Card x-chunk="dashboard-01-chunk-5">
       <CardHeader>
@@ -69,7 +110,12 @@ const AddRoom = () => {
                 <FormItem>
                   <FormLabel>Room Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="room number" type="number" {...field} />
+                    <Input
+                      placeholder="room number"
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -80,66 +126,60 @@ const AddRoom = () => {
             />
             <FormField
               control={roomForm.control}
-              name="status"
+              name="roomType"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Status</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? languages?.find(
-                                (language) => language.value === field.value
-                              )?.label
-                            : "Select language"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search language..." />
-                        <CommandEmpty>No language found.</CommandEmpty>
-                        <CommandGroup>
-                          {languages?.map((language) => (
-                            <CommandItem
-                              value={language.label}
-                              key={language.value}
-                              onSelect={() => {
-                                roomForm.setValue("status", language.value);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  language.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {language.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                <FormItem>
+                  <FormLabel>Room Type</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select room type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {roomType?.map((t: Room_Type, idx) => (
+                        <SelectItem key={idx} value={t._id}>
+                          {t.roomType}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormDescription>
-                    This is the language that will be used in the dashboard.
+                    You can manage email addresses in your{" "}
+                    <Link href="/examples/forms">email settings</Link>.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={roomForm.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {status?.map((s: Room_Status, idx) => (
+                        <SelectItem key={idx} value={s._id}>
+                          {s.status}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    You can manage email addresses in your{" "}
+                    <Link href="/examples/forms">email settings</Link>.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={roomForm.control}
               name="price"
@@ -147,7 +187,12 @@ const AddRoom = () => {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="$1000.00" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="$1000.00"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
                   </FormControl>
                   <FormDescription>This is your private.</FormDescription>
                   <FormMessage />

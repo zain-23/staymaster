@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "./globals.css";
 
-
-
 const recursive = Recursive({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

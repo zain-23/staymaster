@@ -1,5 +1,4 @@
 import { connectDB } from "@/config/db";
-import { ApiError } from "@/lib/apiError";
 import { USER } from "@/model/user.model";
 import bycrpt from "bcrypt";
 import { NextResponse } from "next/server";
@@ -20,7 +19,7 @@ export const POST = async (request: Request, response: Response) => {
           success: false,
         },
         {
-          status: 401,
+          status: 400,
         }
       );
 
@@ -36,7 +35,7 @@ export const POST = async (request: Request, response: Response) => {
           success: false,
         },
         {
-          status: 401,
+          status: 400,
         }
       );
 
