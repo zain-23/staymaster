@@ -43,17 +43,13 @@ export const POST = async (request: Request, response: Response) => {
       username: user.username,
     });
 
-    if (user.role === "admin") {
-      return NextResponse.redirect(new URL("/d", request.url));
-    }
-
-    // return NextResponse.json({
-    //   success: true,
-    //   message: "login successfully",
-    //   data: {
-    //     role: user.role,
-    //   },
-    // });
+    return NextResponse.json({
+      success: true,
+      message: "login successfully",
+      data: {
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.log(error);
   }

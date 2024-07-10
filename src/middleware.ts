@@ -3,9 +3,7 @@ import { verifySession } from "./lib/session";
 
 export default async function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
-
   const { userId, role, email, username } = await verifySession();
-  console.log(userId, role, email, username);
 
   if (
     !userId &&
@@ -28,15 +26,15 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/d", request.url));
   }
 
-  // if (
-  //   (userId &&
-  //     role === "guest" &&
-  //     (currentPath.startsWith("/sign-in") ||
-  //       currentPath.startsWith("/sign-up"))) ||
-  //   currentPath.startsWith("/d")
-  // ) {
-  //   return NextResponse.redirect(new URL("/u", request.url));
-  // }
+  if (
+    userId &&
+    role === "guest" &&
+    (currentPath.startsWith("/sign-in") ||
+      currentPath.startsWith("/sign-up") ||
+      currentPath.startsWith("/d"))
+  ) {
+    return NextResponse.redirect(new URL("/u", request.url));
+  }
 
   return NextResponse.next();
 }

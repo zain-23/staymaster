@@ -25,6 +25,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import NextLink from "next/link";
 
 const SignIn = () => {
   const signupForm = useForm<z.infer<typeof signinSchema>>({
@@ -35,7 +36,14 @@ const SignIn = () => {
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     try {
       const { data: userdetail } = await axios.post("/api/user/sign-in", data);
-      console.log(userdetail);
+      switch (userdetail.data.role) {
+        case "admin":
+          router.push("/d");
+          break;
+        default:
+          router.push("/u");
+          break;
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         toast({
@@ -75,7 +83,15 @@ const SignIn = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <NextLink
+                      href={"/resest-password"}
+                      className="hover:text-primary hover:underline"
+                    >
+                      forgot password
+                    </NextLink>
+                  </div>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -93,6 +109,18 @@ const SignIn = () => {
             >
               Sign in
             </Button>
+          </CardFooter>
+          <CardFooter className="justify-center flex-col">
+            <p>
+              Not Have an account{" "}
+              <NextLink
+                href={"/sign-up"}
+                className="hover:text-primary hover:underline"
+              >
+                sign up
+              </NextLink>{" "}
+              now.
+            </p>
           </CardFooter>
         </form>
       </Form>
