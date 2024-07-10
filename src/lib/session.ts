@@ -1,5 +1,4 @@
 "server only";
-import { USER } from "@/model/user.model";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -55,9 +54,7 @@ export const verifySession = async () => {
   const cookie = cookies().get(cookieOption.name)?.value;
   if (!cookie)
     return {
-      userId: {
-        userId: null,
-      },
+      userId: null,
     };
   const session = await decrypt(cookie!);
   return session;
