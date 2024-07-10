@@ -7,3 +7,11 @@ export type Room_Type = {
   roomType: string;
   description: string;
 };
+export type Room = {
+  _id: string;
+  roomNumber: number;
+  price: number;
+  roomCategory: Room_Type;
+  roomStatus: Room_Status;
+  createdAt: string;
+};

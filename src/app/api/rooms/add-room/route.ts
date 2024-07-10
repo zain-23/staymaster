@@ -1,5 +1,6 @@
 import { connectDB } from "@/config/db";
 import { ROOM } from "@/model/room.model";
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request, response: Response) => {
@@ -15,7 +16,7 @@ export const POST = async (request: Request, response: Response) => {
       return NextResponse.json(
         {
           success: false,
-          message: "This room is already exists",
+          message: "This room number is already exists",
         },
         {
           status: 400,

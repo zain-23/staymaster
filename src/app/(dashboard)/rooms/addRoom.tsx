@@ -25,10 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { useMyRoomContext } from "@/context/roomContext";
 import { roomSchema } from "@/schema/room.schema";
 import { Room_Status, Room_Type } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -37,6 +38,9 @@ import { z } from "zod";
 const AddRoom = () => {
   const [status, setStatus] = useState<Room_Status[] | null>();
   const [roomType, setRoomType] = useState<Room_Type[] | null>();
+  const { onSubmit } = useMyRoomContext();
+  const { toast } = useToast();
+
   const roomForm = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
     defaultValues: {
@@ -44,7 +48,6 @@ const AddRoom = () => {
       status: "",
     },
   });
-  const { toast } = useToast();
 
   useEffect(() => {
     fetchRoomStatus();
@@ -74,27 +77,6 @@ const AddRoom = () => {
     }
   };
 
-  const onSubmit = async (data: z.infer<typeof roomSchema>) => {
-    try {
-      const response = await axios.post("/api/rooms/add-room", {
-        roomNumber: data.roomNumber,
-        roomType: data.roomType,
-        price: data.price,
-        status: data.status,
-      });
-      roomForm.reset();
-      toast({
-        title: response.data.message,
-      });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: error.response?.data.message,
-          variant: "destructive",
-        });
-      }
-    }
-  };
   return (
     <Card x-chunk="dashboard-01-chunk-5">
       <CardHeader>
