@@ -2,8 +2,10 @@ import { USER } from "@/model/user.model";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { createSession } from "@/lib/session";
+import { connectDB } from "@/config/db";
 
 export const POST = async (request: Request, response: Response) => {
+  await connectDB();
   try {
     const { email, password } = await request.json();
     // check user exists with this email
@@ -34,8 +36,24 @@ export const POST = async (request: Request, response: Response) => {
           status: 400,
         }
       );
-    await createSession(user._id);
-    return NextResponse.redirect("http://localhost:3000/d")
+    await createSession({
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+      username: user.username,
+    });
+
+    if (user.role === "admin") {
+      return NextResponse.redirect(new URL("/d", request.url));
+    }
+
+    // return NextResponse.json({
+    //   success: true,
+    //   message: "login successfully",
+    //   data: {
+    //     role: user.role,
+    //   },
+    // });
   } catch (error) {
     console.log(error);
   }

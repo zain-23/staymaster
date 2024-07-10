@@ -1,3 +1,5 @@
+"server only";
+import { USER } from "@/model/user.model";
 import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -30,9 +32,19 @@ const decrypt = async (session: string) => {
   return payload;
 };
 
-export const createSession = async (userId: string) => {
+export const createSession = async ({
+  userId,
+  role,
+  email,
+  username,
+}: {
+  userId: string;
+  role: string;
+  email: string;
+  username: string;
+}) => {
   const expires = new Date(Date.now() + cookieOption.duration);
-  const session = await encrypt({ userId, expires });
+  const session = await encrypt({ userId, role, email, username, expires });
   cookies().set(cookieOption.name, session, {
     ...cookieOption.options,
     expires,
@@ -48,9 +60,7 @@ export const verifySession = async () => {
       },
     };
   const session = await decrypt(cookie!);
-  return {
-    userId: session,
-  };
+  return session;
 };
 
 export const deleteSession = () => {

@@ -1,7 +1,9 @@
+import { connectDB } from "@/config/db";
 import { ROOM } from "@/model/room.model";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
+  await connectDB();
   try {
     const roomStats = await ROOM.aggregate([
       {
@@ -32,7 +34,6 @@ export const GET = async () => {
         },
       },
     ]);
-    console.log(roomStats);
 
     return NextResponse.json(
       {

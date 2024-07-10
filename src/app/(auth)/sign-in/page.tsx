@@ -34,8 +34,8 @@ const SignIn = () => {
   const { toast } = useToast();
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     try {
-      const response = await axios.post("/api/user/sign-in", data);
-      router.push("/d")
+      const { data: userdetail } = await axios.post("/api/user/sign-in", data);
+      console.log(userdetail);
     } catch (error) {
       if (error instanceof AxiosError) {
         toast({

@@ -28,26 +28,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 
 const ShowRoom = () => {
   const { rooms } = useMyRoomContext();
   return (
     <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
-      <CardHeader className="flex flex-row items-center">
+      <CardHeader className="flex flex-row justify-between items-center">
         <div className="grid gap-2">
           <CardTitle>Rooms</CardTitle>
           <CardDescription>Recent rooms from your store.</CardDescription>
         </div>
-        <Link
-          href="#"
-          className={buttonVariants({
-            variant: "ghost",
-            className: "ml-auto gap-1",
-          })}
-        >
-          View All
-          <ArrowUpRight className="h-4 w-4" />
-        </Link>
+        <Input className="w-72 h-10" placeholder="Enter your room id"/>
       </CardHeader>
       <CardContent>
         <Table>
