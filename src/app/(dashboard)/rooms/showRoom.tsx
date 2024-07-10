@@ -20,6 +20,14 @@ import { ArrowUpRight } from "lucide-react";
 import { Room } from "@/types/types";
 import { formateDate, formatePrice } from "@/lib/utils";
 import { useMyRoomContext } from "@/context/roomContext";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const ShowRoom = () => {
   const { rooms } = useMyRoomContext();
@@ -45,6 +53,7 @@ const ShowRoom = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>No</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Room Number</TableHead>
               <TableHead>Status</TableHead>
@@ -55,7 +64,22 @@ const ShowRoom = () => {
           <TableBody>
             {rooms.map((r: Room, idx: number) => (
               <TableRow key={idx}>
-                <TableCell>{r.roomCategory.roomType}</TableCell>
+                <TableCell>{idx + 1}</TableCell>
+                <TableCell>
+                  <Sheet>
+                    <SheetTrigger>{r.roomCategory.roomType}</SheetTrigger>
+                    <SheetContent className="w-full">
+                      <SheetHeader>
+                        <SheetTitle>Are you absolutely sure?</SheetTitle>
+                        <SheetDescription>
+                          This action cannot be undone. This will permanently
+                          delete your account and remove your data from our
+                          servers.
+                        </SheetDescription>
+                      </SheetHeader>
+                    </SheetContent>
+                  </Sheet>
+                </TableCell>
                 <TableCell>{r.roomNumber}</TableCell>
                 <TableCell>{r.roomStatus.status}</TableCell>
                 <TableCell>{formateDate(r.createdAt)}</TableCell>

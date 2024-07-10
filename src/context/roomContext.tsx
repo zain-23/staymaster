@@ -17,6 +17,7 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const [roomId, setRoomId] = useState<string>("");
   const [rooms, setRooms] = useState<Room[] | []>([]);
+
   // Add Room function
   const onSubmit = async (data: z.infer<typeof roomSchema>) => {
     try {

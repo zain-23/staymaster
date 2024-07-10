@@ -15,3 +15,7 @@ export type Room = {
   roomStatus: Room_Status;
   createdAt: string;
 };
+export type Room_Stats = {
+  _id: string;
+  count: number;
+};

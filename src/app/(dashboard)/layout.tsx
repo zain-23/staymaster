@@ -32,16 +32,28 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               Rooms
             </Link>
             <Link
-              href="/transaction"
+              href="/payments"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Transaction
+              Payments
             </Link>
             <Link
-              href="#"
+              href="/feedbacks"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Customers
+              Feedbacks
+            </Link>
+            <Link
+              href="staff"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Staff
+            </Link>
+            <Link
+              href="/application"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Application
             </Link>
           </nav>
           <Sheet>
