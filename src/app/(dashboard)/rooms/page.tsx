@@ -8,7 +8,7 @@ const dynamic = "force-dynamic";
 
 const Rooms = async () => {
   const response = await fetch(
-    "http://localhost:3000/api/rooms/get-rooms-stats",
+    "https://staymaster.vercel.app/api/rooms/get-rooms-stats",
     {
       method: "GET",
       cache: "no-store",
