@@ -12,14 +12,19 @@ import { Button } from "./ui/button";
 import { CircleUser } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useUserContext } from "@/context/userContext";
 
 const ProfileMenu = () => {
   const router = useRouter();
+  const { setLogoutLoading } = useUserContext();
+  
   const logout = async () => {
+    setLogoutLoading(true);
     const response = await axios.post("/api/user/logout");
     if (response.data.success) {
       router.push("/sign-in");
     }
+    setLogoutLoading(false);
   };
   return (
     <DropdownMenu>
