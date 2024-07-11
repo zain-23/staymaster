@@ -36,24 +36,23 @@ const SignIn = () => {
 
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     try {
-      const res = await axios.post(
+      const { data: userdetail } = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/users/sign-in`,
         data,
         {
           withCredentials: true,
         }
       );
-      console.log(res);
-      // switch (userdetail.data.role) {
-      //   case "admin":
-      //     router.push("/d");
-      //     break;
-      //   default:
-      //     router.push("/u");
-      //     break;
-      // }
+      switch (userdetail.data.role) {
+        case "admin":
+          router.push("/d");
+          break;
+        default:
+          router.push("/u");
+          break;
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,

@@ -43,7 +43,7 @@ const SignUp = () => {
       );
       router.push("/sign-in");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,
@@ -109,7 +109,14 @@ const SignUp = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button size={"lg"}>Sign up</Button>
+            <Button
+              size={"lg"}
+              isLoading={signupForm.formState.isSubmitting}
+              loadingText="Loading..."
+              disabled={signupForm.formState.isSubmitting}
+            >
+              Sign up
+            </Button>
           </CardFooter>
           <CardFooter className="justify-center">
             <p>
