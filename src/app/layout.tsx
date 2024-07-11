@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "./globals.css";
 
-const recursive = Recursive({ subsets: ["latin"] });
+const recursive = Recursive({ subsets: ["latin-ext"] });
 
 export const metadata: Metadata = {
   title: "StayMaster",
