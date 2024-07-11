@@ -37,9 +37,13 @@ const SignUp = () => {
 
   const onSubmit = async (data: z.infer<typeof SignupSchema>) => {
     try {
-      const response = await axios.post("/api/user/sign-up", data);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/users/sign-up`,
+        data
+      );
       router.push("/sign-in");
     } catch (error) {
+      console.log(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,
