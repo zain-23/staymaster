@@ -17,14 +17,25 @@ import { useUserContext } from "@/context/userContext";
 const ProfileMenu = () => {
   const router = useRouter();
   const { setLogoutLoading } = useUserContext();
-  
+
   const logout = async () => {
-    setLogoutLoading(true);
-    const response = await axios.post("/api/user/logout");
-    if (response.data.success) {
-      router.push("/sign-in");
+    try {
+      setLogoutLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/users/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.data.success) {
+        router.push("/sign-in");
+      }
+      
+      setLogoutLoading(false);
+    } catch (error) {
+      console.log(error);
     }
-    setLogoutLoading(false);
   };
   return (
     <DropdownMenu>

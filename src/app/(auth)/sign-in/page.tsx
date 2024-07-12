@@ -51,6 +51,9 @@ const SignIn = () => {
           router.push("/u");
           break;
       }
+      toast({
+        title: userdetail.message,
+      });
     } catch (error) {
       console.error(error);
       if (error instanceof AxiosError) {
