@@ -10,6 +10,7 @@ interface MyContextState {
   onSubmit: (data: z.infer<typeof roomSchema>) => Promise<void>;
   rooms: Room[];
   roomStats: Room_Stats[];
+  availableRoom: Room[];
 }
 
 const MyContext = createContext<MyContextState | undefined>(undefined);
@@ -19,6 +20,7 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [roomId, setRoomId] = useState<string>("");
   const [rooms, setRooms] = useState<Room[] | []>([]);
   const [roomStats, setRoomStats] = useState<Room_Stats[] | []>([]);
+  const [availableRoom, setAvailableRoom] = useState<Room[] | []>([]);
 
   // Add Room function
   const onSubmit = async (data: z.infer<typeof roomSchema>) => {
@@ -83,11 +85,29 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
     };
+    const getAvailableRoom = async () => {
+      console.log("run");
+      try {
+        const rooms = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-available-rooms`,
+          {
+            withCredentials: true,
+          }
+        );
+        setAvailableRoom(rooms.data.data);
+      } catch (error) {
+        toast({
+          title: "Something went wrong while fetching available room",
+          variant: "destructive",
+        });
+      }
+    };
     getAllRooms();
     getRoomStats();
+    getAvailableRoom();
   }, [roomId]);
   return (
-    <MyContext.Provider value={{ onSubmit, rooms, roomStats }}>
+    <MyContext.Provider value={{ onSubmit, rooms, roomStats, availableRoom }}>
       {children}
     </MyContext.Provider>
   );

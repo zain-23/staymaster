@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,29 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useMyRoomContext } from "@/context/roomContext";
 import { formatePrice } from "@/lib/utils";
 import { Room } from "@/types/types";
 import React from "react";
 
-const dynamic = "force-dynamic";
-
-const AvailableRoom = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-available-rooms`,
-    {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-    }
-  );
-  const data = await response.json();
-  console.log(data);
-  if (!data) {
-    throw new Error("Something went wrong while fetching available rooms");
-  }
+const AvailableRoom = () => {
+  const { availableRoom } = useMyRoomContext();
   return (
     <div className="grid grid-cols-4 gap-6 items-start">
-      {/* {data.map((r, idx) => (
+      {availableRoom.map((r, idx) => (
         <Card key={idx}>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -46,7 +34,7 @@ const AvailableRoom = async () => {
             <Button>Book now</Button>
           </CardFooter>
         </Card>
-      ))} */}
+      ))}
     </div>
   );
 };
