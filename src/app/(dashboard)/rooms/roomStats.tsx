@@ -8,7 +8,7 @@ const RoomStats = () => {
   const { roomStats } = useMyRoomContext();
   return (
     <>
-      <Card x-chunk="dashboard-01-chunk-0">
+      {/* <Card x-chunk="dashboard-01-chunk-0">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Rooms</CardTitle>
           <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -16,7 +16,7 @@ const RoomStats = () => {
         <CardContent>
           <div className="text-2xl font-bold">$45,231.89</div>
         </CardContent>
-      </Card>
+      </Card> */}
       {roomStats.map((stats, idx) => (
         <Card x-chunk={`dashboard-01-chunk-${idx}`} key={idx}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

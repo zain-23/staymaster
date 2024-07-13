@@ -1,6 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
 import { useMyRoomContext } from "@/context/roomContext";
 import { formatePrice } from "@/lib/utils";
 import { Room } from "@/types/types";
+import Link from "next/link";
 import React from "react";
 
 const AvailableRoom = () => {
@@ -31,7 +32,12 @@ const AvailableRoom = () => {
           </CardHeader>
           <CardContent className="text-xl">{formatePrice(r.price)}</CardContent>
           <CardFooter>
-            <Button>Book now</Button>
+            <Link
+              href={`/u/rooms/bk-room/${r._id}`}
+              className={buttonVariants({})}
+            >
+              Book now
+            </Link>
           </CardFooter>
         </Card>
       ))}
