@@ -16,19 +16,21 @@ const dynamic = "force-dynamic";
 
 const AvailableRoom = async () => {
   const response = await fetch(
-    "http://localhost:3000/api/rooms/get-available-rooms",
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-available-rooms`,
     {
+      method: "GET",
+      credentials: "include",
       cache: "no-cache",
     }
   );
-  const {
-    data,
-  }: {
-    data: Room[];
-  } = await response.json();
+  const data = await response.json();
+  console.log(data);
+  if (!data) {
+    throw new Error("Something went wrong while fetching available rooms");
+  }
   return (
     <div className="grid grid-cols-4 gap-6 items-start">
-      {data.map((r, idx) => (
+      {/* {data.map((r, idx) => (
         <Card key={idx}>
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -44,7 +46,7 @@ const AvailableRoom = async () => {
             <Button>Book now</Button>
           </CardFooter>
         </Card>
-      ))}
+      ))} */}
     </div>
   );
 };

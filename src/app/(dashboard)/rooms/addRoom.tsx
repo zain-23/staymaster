@@ -56,7 +56,12 @@ const AddRoom = () => {
 
   const fetchRoomStatus = async () => {
     try {
-      const { data } = await axios.get("/api/rooms/get-room-status");
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-rooms-status`,
+        {
+          withCredentials: true,
+        }
+      );
       setStatus(data.data);
     } catch (error) {
       toast({
@@ -67,7 +72,12 @@ const AddRoom = () => {
   };
   const fetchRoomCategory = async () => {
     try {
-      const { data } = await axios.get("/api/rooms/get-room-category");
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-rooms-category`,
+        {
+          withCredentials: true,
+        }
+      );
       setRoomType(data.data);
     } catch (error) {
       toast({
@@ -76,7 +86,6 @@ const AddRoom = () => {
       });
     }
   };
-
   return (
     <Card x-chunk="dashboard-01-chunk-5">
       <CardHeader>
