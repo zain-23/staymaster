@@ -19,3 +19,14 @@ export type Room_Stats = {
   _id: string;
   count: number;
 };
+export type All_Room = {
+  docs: Room[];
+  totalDocs: number;
+  limit: number;
+  page: number;
+  totalPages: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  nextPage: number;
+};

@@ -11,13 +11,14 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
-import { Room } from "@/types/types";
+import { All_Room, Room } from "@/types/types";
 import { formateDate, formatePrice } from "@/lib/utils";
 import { useMyRoomContext } from "@/context/roomContext";
 import {
@@ -39,7 +40,7 @@ const ShowRoom = () => {
           <CardTitle>Rooms</CardTitle>
           <CardDescription>Recent rooms from your store.</CardDescription>
         </div>
-        <Input className="w-72 h-10" placeholder="Enter your room id"/>
+        <Input className="w-72 h-10" placeholder="Enter your room id" />
       </CardHeader>
       <CardContent>
         <Table>
@@ -54,7 +55,7 @@ const ShowRoom = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rooms.map((r: Room, idx: number) => (
+            {rooms?.docs.map((r: Room, idx: number) => (
               <TableRow key={idx}>
                 <TableCell>{idx + 1}</TableCell>
                 <TableCell>
@@ -83,6 +84,19 @@ const ShowRoom = () => {
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter className="justify-between">
+        <p>
+          Current page: {rooms?.page}, Total page: {rooms?.totalPages}
+        </p>
+        <div className="space-x-2">
+          <Button variant={"outline"} disabled={!rooms?.hasPrevPage}>
+            Previous
+          </Button>
+          <Button variant={"outline"} disabled={!rooms?.hasNextPage}>
+            Next
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

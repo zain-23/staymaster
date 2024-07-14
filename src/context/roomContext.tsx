@@ -1,14 +1,14 @@
 "use client";
 import { useToast } from "@/components/ui/use-toast";
 import { roomSchema } from "@/schema/room.schema";
-import { Room, Room_Stats } from "@/types/types";
+import { All_Room, Room, Room_Stats } from "@/types/types";
 import axios, { AxiosError } from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { z } from "zod";
 
 interface MyContextState {
   onSubmit: (data: z.infer<typeof roomSchema>) => Promise<void>;
-  rooms: Room[];
+  rooms: All_Room | undefined;
   roomStats: Room_Stats[];
   availableRoom: Room[];
 }
@@ -18,7 +18,7 @@ const MyContext = createContext<MyContextState | undefined>(undefined);
 const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const [roomId, setRoomId] = useState<string>("");
-  const [rooms, setRooms] = useState<Room[] | []>([]);
+  const [rooms, setRooms] = useState<All_Room | undefined>();
   const [roomStats, setRoomStats] = useState<Room_Stats[] | []>([]);
   const [availableRoom, setAvailableRoom] = useState<Room[] | []>([]);
 
