@@ -1,6 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/card";
 import { useMyRoomContext } from "@/context/roomContext";
 import { formatePrice } from "@/lib/utils";
-import { Room } from "@/types/types";
 import Link from "next/link";
-import React from "react";
 
 const AvailableRoom = () => {
   const { availableRoom } = useMyRoomContext();
@@ -25,7 +23,7 @@ const AvailableRoom = () => {
             <div className="flex justify-between items-center">
               <CardTitle>{r.roomCategory.roomType}</CardTitle>
               <Badge className="bg-green-600 hover:bg-green-700">
-                {r.roomStatus.status}
+                {r.status}
               </Badge>
             </div>
             <CardDescription>{r.roomCategory.description}</CardDescription>

@@ -36,7 +36,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const AddRoom = () => {
-  const [status, setStatus] = useState<Room_Status[] | null>();
   const [roomType, setRoomType] = useState<Room_Type[] | null>();
   const { onSubmit } = useMyRoomContext();
   const { toast } = useToast();
@@ -50,26 +49,9 @@ const AddRoom = () => {
   });
 
   useEffect(() => {
-    fetchRoomStatus();
     fetchRoomCategory();
   }, []);
 
-  const fetchRoomStatus = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-rooms-status`,
-        {
-          withCredentials: true,
-        }
-      );
-      setStatus(data.data);
-    } catch (error) {
-      toast({
-        title: "Error fetching room status",
-        variant: "destructive",
-      });
-    }
-  };
   const fetchRoomCategory = async () => {
     try {
       const { data } = await axios.get(
@@ -86,6 +68,17 @@ const AddRoom = () => {
       });
     }
   };
+
+  const status = [
+    "Available",
+    "Booked",
+    "Pending",
+    "Confirmed",
+    "Checked In",
+    "Checked Out",
+    "Cancelled",
+    "Maitenance",
+  ] as const;
   return (
     <Card x-chunk="dashboard-01-chunk-5">
       <CardHeader>
@@ -156,9 +149,9 @@ const AddRoom = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {status?.map((s: Room_Status, idx) => (
-                        <SelectItem key={idx} value={s._id}>
-                          {s.status}
+                      {status.map((s, idx) => (
+                        <SelectItem key={idx} value={s}>
+                          {s}
                         </SelectItem>
                       ))}
                     </SelectContent>

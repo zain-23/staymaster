@@ -12,7 +12,7 @@ export type Room = {
   roomNumber: number;
   price: number;
   roomCategory: Room_Type;
-  roomStatus: Room_Status;
+  status: string;
   createdAt: string;
 };
 export type Room_Stats = {

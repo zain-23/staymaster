@@ -72,7 +72,7 @@ const ShowRoom = () => {
                   </Sheet>
                 </TableCell>
                 <TableCell>{r.roomNumber}</TableCell>
-                <TableCell>{r.roomStatus.status}</TableCell>
+                <TableCell>{r.status}</TableCell>
                 <TableCell>{formateDate(r.createdAt)}</TableCell>
                 <TableCell className="text-right">
                   {formatePrice(r.price)}
