@@ -11,6 +11,8 @@ interface MyContextState {
   rooms: All_Room | undefined;
   roomStats: Room_Stats[];
   availableRoom: Room[];
+  nextPage: () => void;
+  prevPage: () => void;
 }
 
 const MyContext = createContext<MyContextState | undefined>(undefined);
@@ -21,6 +23,20 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [rooms, setRooms] = useState<All_Room | undefined>();
   const [roomStats, setRoomStats] = useState<Room_Stats[] | []>([]);
   const [availableRoom, setAvailableRoom] = useState<Room[] | []>([]);
+  const [roomPage, setRoomPage] = useState<number>(1);
+
+  // Go to next page
+  const nextPage = () => {
+    if (rooms?.hasNextPage) {
+      setRoomPage((prev) => prev + 1);
+    }
+  };
+  // Go to previous page
+  const prevPage = () => {
+    if (rooms?.hasPrevPage) {
+      setRoomPage((prev) => prev - 1);
+    }
+  };
 
   // Add Room function
   const onSubmit = async (data: z.infer<typeof roomSchema>) => {
@@ -53,22 +69,6 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Fetch all rooms
   useEffect(() => {
-    const getAllRooms = async () => {
-      try {
-        const rooms = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-all-rooms`,
-          {
-            withCredentials: true,
-          }
-        );
-        setRooms(rooms.data.data);
-      } catch (error) {
-        toast({
-          title: "Something went wrong while fetching all room",
-          variant: "destructive",
-        });
-      }
-    };
     const getRoomStats = async () => {
       try {
         const rooms = await axios.get(
@@ -86,7 +86,6 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     const getAvailableRoom = async () => {
-      console.log("run");
       try {
         const rooms = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-available-rooms`,
@@ -102,12 +101,36 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
         });
       }
     };
-    getAllRooms();
     getRoomStats();
     getAvailableRoom();
-  }, [roomId]);
+  }, []);
+
+  useEffect(() => {
+    const getAllRooms = async () => {
+      try {
+        const rooms = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/get-all-rooms`,
+          {
+            withCredentials: true,
+            params: {
+              page: roomPage,
+            },
+          }
+        );
+        setRooms(rooms.data.data);
+      } catch (error) {
+        toast({
+          title: "Something went wrong while fetching all room",
+          variant: "destructive",
+        });
+      }
+    };
+    getAllRooms();
+  }, [roomId, roomPage]);
   return (
-    <MyContext.Provider value={{ onSubmit, rooms, roomStats, availableRoom }}>
+    <MyContext.Provider
+      value={{ onSubmit, rooms, roomStats, availableRoom, nextPage, prevPage }}
+    >
       {children}
     </MyContext.Provider>
   );
@@ -116,7 +139,7 @@ const RoomContextProvider = ({ children }: { children: React.ReactNode }) => {
 const useMyRoomContext = () => {
   const context = useContext(MyContext);
   if (context === undefined) {
-    throw new Error("Something went wrong in context api");
+    throw new Error("Something went wrong in room context api");
   }
   return context;
 };

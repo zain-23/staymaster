@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AddRoom from "./addRoom";
 import RoomStats from "./roomStats";
 import ShowRoom from "./showRoom";
@@ -9,7 +10,9 @@ const Rooms = () => {
         <RoomStats />
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-        <ShowRoom />
+        <Suspense fallback={<p className="text-4xl">Loading...</p>}>
+          <ShowRoom />
+        </Suspense>
         <AddRoom />
       </div>
     </>

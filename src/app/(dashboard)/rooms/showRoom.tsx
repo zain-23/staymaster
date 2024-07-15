@@ -1,12 +1,5 @@
 "use client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,12 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
-import { All_Room, Room } from "@/types/types";
-import { formateDate, formatePrice } from "@/lib/utils";
-import { useMyRoomContext } from "@/context/roomContext";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -29,10 +17,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useMyRoomContext } from "@/context/roomContext";
+import { formateDate, formatePrice } from "@/lib/utils";
+import { Room } from "@/types/types";
 
 const ShowRoom = () => {
-  const { rooms } = useMyRoomContext();
+  const { rooms, nextPage, prevPage } = useMyRoomContext();
   return (
     <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -85,14 +83,9 @@ const ShowRoom = () => {
         </Table>
       </CardContent>
       <CardFooter className="justify-between">
-        <p>
-          Current page: {rooms?.page}, Total page: {rooms?.totalPages}
-        </p>
         <div className="space-x-2">
-          <Button variant={"outline"} disabled={!rooms?.hasPrevPage}>
-            Previous
-          </Button>
-          <Button variant={"outline"} disabled={!rooms?.hasNextPage}>
+          <Button disabled={!rooms?.hasPrevPage} onClick={prevPage}>Previous</Button>
+          <Button disabled={!rooms?.hasNextPage} onClick={nextPage}>
             Next
           </Button>
         </div>
