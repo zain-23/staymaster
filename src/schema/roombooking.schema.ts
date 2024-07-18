@@ -5,16 +5,13 @@ export const roomBookingSchema = z.object({
     .string({
       required_error: "checked in date is required",
     })
-    .datetime({
-      message: "Checked-in date must be a valid date-time string",
-    }),
+    .refine((val) => !isNaN(Date.parse(val))),
   checkedOutDate: z
     .string({
       required_error: "checked out date is required",
     })
-    .datetime({
-      message: "Checked-out date must be a valid date-time string",
-    }),
+    .refine((val) => !isNaN(Date.parse(val))),
+  days: z.number({ required_error: "days is required" }),
   roomId: z.string({
     required_error: "room id is required",
   }),

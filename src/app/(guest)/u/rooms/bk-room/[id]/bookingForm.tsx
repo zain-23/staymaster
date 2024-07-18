@@ -20,19 +20,25 @@ import { useToast } from "@/components/ui/use-toast";
 import { roomBookingSchema } from "@/schema/roombooking.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const BookingForm = ({ roomId }: { roomId: string }) => {
+  const [countDays, setCountDays] = useState<number>(0);
   const bookingForm = useForm<z.infer<typeof roomBookingSchema>>({
     resolver: zodResolver(roomBookingSchema),
     defaultValues: {
       checkedInDate: "",
       checkedOutDate: "",
       roomId: roomId,
+      days: countDays,
     },
   });
-
+  const router = useRouter();
+  const checkedInDate = bookingForm.watch("checkedInDate");
+  const checkedOutDate = bookingForm.watch("checkedOutDate");
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof roomBookingSchema>) => {
@@ -43,6 +49,7 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
           roomId,
           checkedOut: values.checkedOutDate,
           checkedIn: values.checkedInDate,
+          days: countDays,
         },
         {
           withCredentials: true,
@@ -52,7 +59,9 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
         title: response.data.message,
         variant: "default",
       });
+      router.push("/u/rooms");
     } catch (error) {
+      console.log(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,
@@ -61,6 +70,19 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
       }
     }
   };
+
+  useEffect(() => {
+    const calculateDays = () => {
+      const inDate = new Date(checkedInDate);
+      const outDate = new Date(checkedOutDate);
+
+      if (inDate < outDate) {
+        const difference = Number(outDate.getDate()) - Number(inDate.getDate());
+        setCountDays(difference);
+      }
+    };
+    calculateDays();
+  }, [checkedInDate, checkedOutDate]);
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
@@ -80,10 +102,10 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
                       type="datetime-local"
                       {...field}
                       className="p-2 text-lg"
-                      value={field.value ? field.value.slice(0, 16) : ""}
+                      // value={field.value ? field.value.slice(0, 16) : ""}
                       onChange={(e) => {
-                        const dateTime = new Date(e.target.value).toISOString();
-                        field.onChange(dateTime);
+                        const dateTime = new Date(e.target.value);
+                        field.onChange(e.target.value);
                       }}
                     />
                   </FormControl>
@@ -102,11 +124,32 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
                       type="datetime-local"
                       {...field}
                       className="p-2 text-lg"
-                      value={field.value ? field.value.slice(0, 16) : ""}
+                      // value={field.value ? field.value.slice(0, 16) : ""}
                       onChange={(e) => {
-                        const dateTime = new Date(e.target.value).toISOString();
-                        field.onChange(dateTime);
+                        const dateTime = new Date(e.target.value);
+                        // console.log(dateTime, e.target.value);
+                        field.onChange(e.target.value);
                       }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={bookingForm.control}
+              name="days"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>How many days you stayed</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      className="p-2 text-lg"
+                      disabled
+                      value={countDays}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
