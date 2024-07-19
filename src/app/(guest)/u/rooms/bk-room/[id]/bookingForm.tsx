@@ -59,9 +59,9 @@ const BookingForm = ({ roomId }: { roomId: string }) => {
         title: response.data.message,
         variant: "default",
       });
-      router.push("/u/rooms");
+      router.push(response.data.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,

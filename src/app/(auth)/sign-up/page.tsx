@@ -43,7 +43,7 @@ const SignUp = () => {
       );
       router.push("/sign-in");
     } catch (error) {
-      console.error(error);
+      console.log(error);
       if (error instanceof AxiosError) {
         toast({
           title: error.response?.data.message,
